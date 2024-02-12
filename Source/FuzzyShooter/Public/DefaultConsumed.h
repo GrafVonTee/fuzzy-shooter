@@ -4,22 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Obstacle.generated.h"
+#include "DefaultConsumed.generated.h"
 
 UCLASS()
-class FUZZYSHOOTER_API AObstacle : public AActor
+class FUZZYSHOOTER_API ADefaultConsumed : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AObstacle();
+	ADefaultConsumed();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Length")
-	float DefaultLength = 80;
+	UPROPERTY(
+		EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Value")
+	int32 MaximumValue = 150;
 
-	UFUNCTION(BlueprintCallable, Category = "Calculating")
-	float CalculateNewEllipseRadius(FRotator rotation);
+	UPROPERTY(
+		EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Value",
+		meta = (ClampMin = 0))
+	int32 CurrentValue = 0;
 
 protected:
 	// Called when the game starts or when spawned

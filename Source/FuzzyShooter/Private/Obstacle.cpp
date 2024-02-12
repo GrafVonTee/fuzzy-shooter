@@ -2,6 +2,8 @@
 
 
 #include "Obstacle.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 AObstacle::AObstacle()
@@ -25,3 +27,22 @@ void AObstacle::Tick(float DeltaTime)
 
 }
 
+float AObstacle::CalculateNewEllipseRadius(FRotator rotation)
+{
+	float semisideA = DefaultLength * 2;
+	float semisideB = DefaultLength;
+
+	FVector newDirection = rotation.Vector();
+	newDirection.Normalize();
+
+	FVector meshDirection = GetActorRotation().Vector();
+	meshDirection.Normalize();
+
+	float angle = FVector::DotProduct(meshDirection, newDirection);
+	angle = UKismetMathLibrary::Acos(angle);
+
+	float a = FMath::Square(semisideA * UKismetMathLibrary::Cos(angle));
+	float b = FMath::Square(semisideB * UKismetMathLibrary::Sin(angle));
+
+	return (semisideA * semisideB) / FMath::Sqrt(a + b);
+}
