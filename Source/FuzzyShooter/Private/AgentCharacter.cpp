@@ -3,3 +3,13 @@
 
 #include "AgentCharacter.h"
 
+void AAgentCharacter::ReceiveDamage(int32 DamageTaken)
+{
+	Super::ReceiveDamage(DamageTaken);
+
+	if (bIsDead)
+	{
+		Destroy();
+	}
+
+}

@@ -4,8 +4,12 @@
 #include "BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine/EngineTypes.h"
+
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -19,7 +23,6 @@ ABaseCharacter::ABaseCharacter()
 	GetCapsuleComponent()->InitCapsuleSize(42, 90);
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkelMesh(TEXT("/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"));
-	static ConstructorHelpers::FObjectFinder<UAnimSequence> IdleAnim(TEXT("/Game/Mannequin/Animations/ThirdPerson_AnimBP.ThirdPerson_AnimBP"));
 
 	if (SkelMesh.Succeeded())
 	{
@@ -28,16 +31,26 @@ ABaseCharacter::ABaseCharacter()
 		GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 
-	if (IdleAnim.Succeeded())
-	{
-		GetMesh()->SetAnimation(IdleAnim.Object);
-	}
-	
-
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	SpawnerSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpawnerSpringArm"));
+	SpawnerSpringArm->SetupAttachment(RootComponent);
+	SpawnerSpringArm->TargetArmLength = 70;
+	SpawnerSpringArm->AddLocalRotation(FRotator(0, 180, 0));
+
+	SpawnPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
+	SpawnPoint->SetupAttachment(SpawnerSpringArm);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMeshAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	
+	if (SphereMeshAsset.Succeeded())
+	{
+		SpawnPoint->SetStaticMesh(SphereMeshAsset.Object);
+		SpawnPoint->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
+		SpawnPoint->SetVisibility(false);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -45,6 +58,8 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ResetRegenTimer();
+
 }
 
 // Called every frame
@@ -80,19 +95,48 @@ void ABaseCharacter::MoveRight(float Axis)
 	}
 }
 
+bool ABaseCharacter::CanShoot() const
+{
+	return (CurrentAmmo > 0) && !bIsDead && !bShootBlocked;
+}
+
 void ABaseCharacter::Shoot()
 {
-	if (CurrentAmmo > 0 && !bIsDead)
+	if (CanShoot())
 	{
-		// Reducing ammo
 		--CurrentAmmo;
-
-		// Find direction to shoot
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// here should be code for spawning bullet and shooting
+		IAttackInterface::Execute_BeginAttack(this);
+		bShootBlocked = true;
 	}
+}
+
+void ABaseCharacter::StopShooting()
+{
+	IAttackInterface::Execute_StopAttack(this);
+	bShootBlocked = false;
+}
+
+void ABaseCharacter::ReceiveDamage(int32 DamageTaken)
+{
+	ResetRegenTimer();
+	CurrentHealth -= DamageTaken;
+	if (CurrentHealth <= 0)
+	{
+		CurrentHealth = 0;
+		bIsDead = true;
+	}
+
+}
+
+void ABaseCharacter::RegenHealth()
+{
+	CurrentHealth += RegenValue;
+	CurrentHealth = FMath::Clamp(CurrentHealth, 0, MaxHealth);
+
+}
+
+void ABaseCharacter::ResetRegenTimer()
+{
+	GetWorldTimerManager().SetTimer(RegenTimerHandle, this, &ABaseCharacter::RegenHealth, RegenRate, true);
+
 }

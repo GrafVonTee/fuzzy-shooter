@@ -4,22 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Obstacle.generated.h"
+#include "BulletSpawner.generated.h"
 
 UCLASS()
-class FUZZYSHOOTER_API AObstacle : public AActor
+class FUZZYSHOOTER_API ABulletSpawner : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AObstacle();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Length")
-	float DefaultLength = 80;
-
-	UFUNCTION(BlueprintCallable, Category = "Calculating")
-	void CalculateNewEllipseRadius(FRotator rotation, FVector obstacleScale, float &radius) const;
+	ABulletSpawner();
 
 protected:
 	// Called when the game starts or when spawned

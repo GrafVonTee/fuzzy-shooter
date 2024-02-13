@@ -14,4 +14,6 @@ class FUZZYSHOOTER_API AAgentCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void ReceiveDamage(int32 DamageTaken) override;
 };
