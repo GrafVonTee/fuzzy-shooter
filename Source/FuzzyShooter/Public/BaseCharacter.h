@@ -88,6 +88,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Control")
 	virtual void ReceiveDamage(int32 DamageTaken);
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Control")
+	void OnDestroyAction();
+
 
 	/** Shooting section */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")

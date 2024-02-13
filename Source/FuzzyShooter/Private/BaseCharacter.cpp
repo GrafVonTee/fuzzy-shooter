@@ -124,6 +124,7 @@ void ABaseCharacter::ReceiveDamage(int32 DamageTaken)
 	{
 		CurrentHealth = 0;
 		bIsDead = true;
+		OnDestroyAction();
 	}
 
 }

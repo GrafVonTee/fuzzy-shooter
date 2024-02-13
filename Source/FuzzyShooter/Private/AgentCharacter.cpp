@@ -3,13 +3,8 @@
 
 #include "AgentCharacter.h"
 
-void AAgentCharacter::ReceiveDamage(int32 DamageTaken)
+AAgentCharacter::AAgentCharacter()
 {
-	Super::ReceiveDamage(DamageTaken);
-
-	if (bIsDead)
-	{
-		Destroy();
-	}
-
+	ActionState = EActionState::VE_Shoot;
+	MovingState = EMovingState::VE_Chase;
 }
