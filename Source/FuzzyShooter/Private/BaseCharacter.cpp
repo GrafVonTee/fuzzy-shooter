@@ -37,7 +37,7 @@ ABaseCharacter::ABaseCharacter()
 
 	SpawnerSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpawnerSpringArm"));
 	SpawnerSpringArm->SetupAttachment(RootComponent);
-	SpawnerSpringArm->TargetArmLength = 70;
+	SpawnerSpringArm->TargetArmLength = 100;
 	SpawnerSpringArm->AddLocalRotation(FRotator(0, 180, 0));
 
 	SpawnPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));

@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InterestPointInterface.h"
 #include "DefaultConsumed.generated.h"
 
 UCLASS()
-class FUZZYSHOOTER_API ADefaultConsumed : public AActor
+class FUZZYSHOOTER_API ADefaultConsumed : public AActor, public IInterestPointInterface
 {
 	GENERATED_BODY()
 	

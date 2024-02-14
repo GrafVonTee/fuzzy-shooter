@@ -18,7 +18,6 @@ UENUM(BlueprintType)
 enum class EMovingState : uint8
 {
 	VE_Chase	UMETA(DisplayName = "Chase"),
-	VE_Pose		UMETA(DisplayName = "Pose"),
 	VE_Ammo		UMETA(DisplayName = "Go to Ammo"),
 	VE_MedKit	UMETA(DisplayName = "Go to Medical Kit"),
 	VE_Hide		UMETA(DisplayName = "Hide"),
@@ -38,6 +37,8 @@ class FUZZYSHOOTER_API AAgentCharacter : public ABaseCharacter
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void SetNewPointInterest();
 
 public:
 	// Called every frame
@@ -64,21 +65,25 @@ public:
 
 
 	/** Moving Behaviour Section */
+	FTimerHandle MovingTimerHandle;
+	const float PathFindDuration = 0.25;
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void ResetMovingTimer();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Moving Behaviour")
 	EMovingState MovingState;
 
-	FTimerHandle MovingTimerHandle;
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Moving Behaviour")
-	void MoveTo(FVector Destination);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Moving Behaviour")
+	AActor* InterestPoint;
 
 	void SwapMovingState();
 
-	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
-	void SetChaseState();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Moving Behaviour")
+	void MoveToInterestPoint();
 
 	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
-	void SetPoseState();
+	void SetChaseState();
 
 	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
 	void SetAmmoState();
@@ -110,4 +115,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	float MinimumShootRate = 2; // seconds
 
+
+	/** Garbage Section */
+	UPROPERTY()  // Put this in the header file so you can mark it as UPROPERTY
+	TArray<AActor*> ActorsArray; // Without UPROPERTY, strange things may happen with garbage collection on TArray
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interest Points")
+	TSubclassOf<class ADefaultConsumed> AmmoBoxClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interest Points")
+	TSubclassOf<class ADefaultConsumed> MedKitClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interest Points")
+	TSubclassOf<class AObstacle> ObstacleClass;
 };

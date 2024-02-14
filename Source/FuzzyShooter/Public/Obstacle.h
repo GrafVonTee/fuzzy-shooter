@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InterestPointInterface.h"
 #include "Obstacle.generated.h"
 
 UCLASS()
-class FUZZYSHOOTER_API AObstacle : public AActor
+class FUZZYSHOOTER_API AObstacle : public AActor, public IInterestPointInterface
 {
 	GENERATED_BODY()
 	

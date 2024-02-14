@@ -2,14 +2,21 @@
 
 
 #include "AgentCharacter.h"
+#include "PlayerCharacter.h"
+#include "DefaultConsumed.h"
+#include "Obstacle.h"
+#include "InterestPointInterface.h"
 #include "Engine/EngineTypes.h"
+#include "Kismet/GameplayStatics.h"
 
 void AAgentCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	SetShootingState();
-	MovingState = EMovingState::VE_Chase;
+	SetChaseState();
+
+	ResetMovingTimer();
 
 }
 
@@ -42,6 +49,35 @@ void AAgentCharacter::SwapActionState()
 
 void AAgentCharacter::SwapMovingState()
 {
+	static EMovingState LastMovingState = MovingState;
+
+	if (MovingState != LastMovingState)
+	{
+		switch (MovingState)
+		{
+		case EMovingState::VE_Chase:
+			SetChaseState();
+			break;
+
+		case EMovingState::VE_Ammo:
+			SetAmmoState();
+			break;
+
+		case EMovingState::VE_MedKit:
+			SetMedKitState();
+			break;
+
+		case EMovingState::VE_Hide:
+			SetHideState();
+			break;
+
+		default:
+			break;
+		}
+
+		LastMovingState = MovingState;
+		ResetMovingTimer();
+	}
 
 }
 
@@ -90,28 +126,79 @@ void AAgentCharacter::UpdateRunningSpeed(float Degree)
 
 void AAgentCharacter::SetChaseState()
 {
+	MovingState = EMovingState::VE_Chase;
+	InterestPoint = Cast<AActor>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
 }
 
-void AAgentCharacter::SetPoseState()
+void AAgentCharacter::SetNewPointInterest()
 {
+	InterestPoint = ActorsArray[0];
+	IInterestPointInterface* InterfaceRef = Cast<IInterestPointInterface>(InterestPoint);
+
+	if (!InterfaceRef)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *(InterestPoint->GetName()));
+		InterestPoint = nullptr;
+		return;
+	}
+
+	float MinimumDistance = FVector::Dist(GetActorLocation(), InterfaceRef->Execute_GetPointOfInterest(InterestPoint));
+
+	for (AActor* Actor : ActorsArray)
+	{
+		InterfaceRef = Cast<IInterestPointInterface>(Actor);
+		float Distance = FVector::Dist(GetActorLocation(), InterfaceRef->Execute_GetPointOfInterest(Actor));
+
+		if (Distance < MinimumDistance)
+		{
+			InterestPoint = Actor;
+			MinimumDistance = Distance;
+		}
+	}
+
 }
 
 void AAgentCharacter::SetAmmoState()
 {
+	MovingState = EMovingState::VE_Ammo;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AmmoBoxClass, ActorsArray);
+	SetNewPointInterest();
+
+	ActorsArray.Empty();
+
 }
 
 void AAgentCharacter::SetMedKitState()
 {
+	MovingState = EMovingState::VE_MedKit;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), MedKitClass, ActorsArray);
+	SetNewPointInterest();
+
+	ActorsArray.Empty();
+
 }
 
 void AAgentCharacter::SetHideState()
 {
+	MovingState = EMovingState::VE_Hide;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ObstacleClass, ActorsArray);
+	SetNewPointInterest();
+
+	ActorsArray.Empty();
+
 }
 
 void AAgentCharacter::OneShot()
 {
 	Shoot();
 	StopShooting();
+
+}
+
+void AAgentCharacter::ResetMovingTimer()
+{
+	GetWorldTimerManager().SetTimer(MovingTimerHandle, this, &AAgentCharacter::MoveToInterestPoint, PathFindDuration, true);
 
 }
 
