@@ -49,6 +49,7 @@ ABaseCharacter::ABaseCharacter()
 	{
 		SpawnPoint->SetStaticMesh(SphereMeshAsset.Object);
 		SpawnPoint->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
+		SpawnPoint->SetRelativeRotation(FRotator(0, 180, 0));
 		SpawnPoint->SetVisibility(false);
 	}
 }
@@ -104,7 +105,6 @@ void ABaseCharacter::Shoot()
 {
 	if (CanShoot())
 	{
-		--CurrentAmmo;
 		IAttackInterface::Execute_BeginAttack(this);
 		bShootBlocked = true;
 	}

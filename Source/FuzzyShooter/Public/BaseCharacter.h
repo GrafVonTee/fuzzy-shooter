@@ -60,12 +60,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 MaxAmmo = 150;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
-	float CurrentShootRate = 0.5; // times per second
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
-	float MaximumShootRate = 5; // times per second
-
 
 	// Speed Block
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
@@ -96,13 +90,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	bool bShootBlocked = false;
 
-	/** Movement Function Section */
-	void MoveForward(float Axis);
-	void MoveRight(float Axis);
-
-	/** Shooting section */
 	bool CanShoot() const;
 	void Shoot();
 	void StopShooting();
+
+
+	/** Movement Function Section */
+	void MoveForward(float Axis);
+	void MoveRight(float Axis);
 
 };

@@ -2,9 +2,46 @@
 
 
 #include "AgentCharacter.h"
+#include "Engine/EngineTypes.h"
 
-AAgentCharacter::AAgentCharacter()
+void AAgentCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SetShootingState();
+	MovingState = EMovingState::VE_Chase;
+
+}
+
+void AAgentCharacter::SetShootingState()
 {
 	ActionState = EActionState::VE_Shoot;
-	MovingState = EMovingState::VE_Chase;
+	ResetShootingTimer();
+
+}
+
+void AAgentCharacter::SetRunningState()
+{
+	ActionState = EActionState::VE_Run;
+	ClearShootingTimer();
+
+}
+
+void AAgentCharacter::OneShot()
+{
+	Shoot();
+	StopShooting();
+
+}
+
+void AAgentCharacter::ResetShootingTimer()
+{
+	GetWorldTimerManager().SetTimer(ShootingTimerHandle, this, &AAgentCharacter::OneShot, CurrentShootRate, true);
+
+}
+
+void AAgentCharacter::ClearShootingTimer()
+{
+	GetWorldTimerManager().ClearTimer(ShootingTimerHandle);
+
 }

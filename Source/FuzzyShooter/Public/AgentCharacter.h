@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -37,13 +35,44 @@ class FUZZYSHOOTER_API AAgentCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 	
-public:
-	// Sets default values for this character's properties
-	AAgentCharacter();
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behaviour")
+public:
+	/** Action Behaviour Section */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action Behaviour")
 	EActionState ActionState;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behaviour")
+	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
+	void SetShootingState();
+
+	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
+	void SetRunningState();
+
+
+	/** Moving Behaviour Section */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Moving Behaviour")
 	EMovingState MovingState;
+	
+
+	/** Shooting Section */
+	void OneShot();
+
+	FTimerHandle ShootingTimerHandle;
+
+	UFUNCTION(BlueprintCallable, Category = "Shooting Control")
+	void ResetShootingTimer();
+
+	UFUNCTION(BlueprintCallable, Category = "Shooting Control")
+	void ClearShootingTimer();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float CurrentShootRate = 1; // seconds
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float MaximumShootRate = 0.3; // seconds
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float MinimumShootRate = 2; // seconds
 };
