@@ -40,21 +40,55 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+
 	/** Action Behaviour Section */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action Behaviour")
 	EActionState ActionState;
 
+	void SwapActionState();
+
 	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
 	void SetShootingState();
 
+	UFUNCTION(BlueprintCallable, Category = "Shooting Control")
+	void UpdateShootingRate(float Degree);
+
 	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
 	void SetRunningState();
+
+	UFUNCTION(BlueprintCallable, Category = "Running Control")
+	void UpdateRunningSpeed(float Degree);
 
 
 	/** Moving Behaviour Section */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Moving Behaviour")
 	EMovingState MovingState;
+
+	FTimerHandle MovingTimerHandle;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Moving Behaviour")
+	void MoveTo(FVector Destination);
+
+	void SwapMovingState();
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetChaseState();
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetPoseState();
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetAmmoState();
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetMedKitState();
 	
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetHideState();
+
 
 	/** Shooting Section */
 	void OneShot();
@@ -71,8 +105,9 @@ public:
 	float CurrentShootRate = 1; // seconds
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float MaximumShootRate = 0.3; // seconds
+	float MaximumShootRate = 0.2; // seconds
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	float MinimumShootRate = 2; // seconds
+
 };

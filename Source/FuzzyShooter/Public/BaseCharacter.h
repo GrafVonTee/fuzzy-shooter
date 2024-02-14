@@ -63,16 +63,13 @@ public:
 
 	// Speed Block
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
-	float CurrentSpeed = 0;
+	float CurrentSpeed = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
-	float BaseSpeed = 400;
+	float BaseSpeed = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
-	float BoostMaxSpeed = 1000;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
-	bool bIsOnBoost = false;
+	float BoostMaxSpeed = 400;
 
 
 	// Control Block
