@@ -38,8 +38,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SetNewPointInterest();
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -76,6 +74,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Moving Behaviour")
 	AActor* InterestPoint;
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void SetNewPointInterest();
+
+	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
+	void UpdatePointOfInterest();
 
 	void SwapMovingState();
 

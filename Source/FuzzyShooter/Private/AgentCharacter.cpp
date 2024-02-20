@@ -8,6 +8,7 @@
 #include "InterestPointInterface.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AAgentCharacter::BeginPlay()
 {
@@ -121,7 +122,7 @@ void AAgentCharacter::SetRunningState()
 void AAgentCharacter::UpdateRunningSpeed(float Degree)
 {
 	CurrentSpeed = BaseSpeed + (BoostMaxSpeed - BaseSpeed) * Degree;
-
+	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 }
 
 void AAgentCharacter::SetChaseState()
@@ -133,12 +134,17 @@ void AAgentCharacter::SetChaseState()
 
 void AAgentCharacter::SetNewPointInterest()
 {
+	if (ActorsArray.Num() == 0)
+	{
+		InterestPoint = nullptr;
+		return;
+	}
+
 	InterestPoint = ActorsArray[0];
 	IInterestPointInterface* InterfaceRef = Cast<IInterestPointInterface>(InterestPoint);
 
 	if (!InterfaceRef)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *(InterestPoint->GetName()));
 		InterestPoint = nullptr;
 		return;
 	}
@@ -159,33 +165,58 @@ void AAgentCharacter::SetNewPointInterest()
 
 }
 
+void AAgentCharacter::UpdatePointOfInterest()
+{
+	switch (MovingState)
+	{
+	case EMovingState::VE_Chase:
+		SetChaseState();
+		break;
+
+	case EMovingState::VE_Ammo:
+		SetAmmoState();
+		break;
+
+	case EMovingState::VE_MedKit:
+		SetMedKitState();
+		break;
+
+	case EMovingState::VE_Hide:
+		SetHideState();
+		break;
+
+	default:
+		break;
+	}
+}
+
 void AAgentCharacter::SetAmmoState()
 {
+	ActorsArray.Empty();
+
 	MovingState = EMovingState::VE_Ammo;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AmmoBoxClass, ActorsArray);
 	SetNewPointInterest();
-
-	ActorsArray.Empty();
 
 }
 
 void AAgentCharacter::SetMedKitState()
 {
+	ActorsArray.Empty();
+
 	MovingState = EMovingState::VE_MedKit;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), MedKitClass, ActorsArray);
 	SetNewPointInterest();
-
-	ActorsArray.Empty();
 
 }
 
 void AAgentCharacter::SetHideState()
 {
+	ActorsArray.Empty();
+
 	MovingState = EMovingState::VE_Hide;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ObstacleClass, ActorsArray);
 	SetNewPointInterest();
-
-	ActorsArray.Empty();
 
 }
 

@@ -2,6 +2,15 @@
 
 
 #include "PlayerCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BaseSpeed = 300;
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+}
 
 // Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
