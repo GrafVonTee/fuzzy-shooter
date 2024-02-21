@@ -3,17 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-
-#include "Rule.h"
-
-#include "RuleBlock.generated.h"
+#include "FuzzyLib/Norms/TNorm.h"
+#include "AlgebraticTNorm.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FUZZYSHOOTER_API URuleBlock : public UObject
+class FUZZYSHOOTER_API UAlgebraticTNorm : public UTNorm
 {
 	GENERATED_BODY()
 	

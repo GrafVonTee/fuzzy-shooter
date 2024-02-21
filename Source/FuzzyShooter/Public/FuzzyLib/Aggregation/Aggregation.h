@@ -14,4 +14,7 @@ class FUZZYSHOOTER_API UAggregation : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	virtual float Compute(TArray<float> Values);
+
 };

@@ -3,17 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-
-#include "Rule.h"
-
-#include "RuleBlock.generated.h"
+#include "FuzzyLib/Accumulation/Accumulation.h"
+#include "MaxAccumulation.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FUZZYSHOOTER_API URuleBlock : public UObject
+class FUZZYSHOOTER_API UMaxAccumulation : public UAccumulation
 {
 	GENERATED_BODY()
 	

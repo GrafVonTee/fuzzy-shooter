@@ -3,3 +3,8 @@
 
 #include "FuzzyLib/Aggregation/Aggregation.h"
 
+float UAggregation::Compute(TArray<float> Values)
+{
+	return 0.0f;
+
+}

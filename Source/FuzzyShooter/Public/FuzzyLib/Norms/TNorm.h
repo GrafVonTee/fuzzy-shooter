@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-
-#include "Rule.h"
-
-#include "RuleBlock.generated.h"
+#include "TNorm.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FUZZYSHOOTER_API URuleBlock : public UObject
+class FUZZYSHOOTER_API UTNorm : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	static float Compute(float a, float b);
+
 };
