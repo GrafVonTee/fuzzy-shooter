@@ -29,7 +29,7 @@ public:
 	virtual void MakeRange() override;
 
 	void Set(
-		FName NameOther,
+		FString NameOther,
 		int32 LowerBoundOther,
 		int32 UpperBoundOther,
 		int32 PointAOther,

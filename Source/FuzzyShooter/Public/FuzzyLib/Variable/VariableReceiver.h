@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
+#include "FuzzyLib/Term/Term.h"
+
 #include "VariableReceiver.generated.h"
 
 /**
@@ -14,4 +17,7 @@ class FUZZYSHOOTER_API UVariableReceiver : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	virtual FString Receive(TMap<FString, float> List);
+
 };

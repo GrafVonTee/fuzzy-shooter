@@ -15,6 +15,7 @@ class FUZZYSHOOTER_API UMinAggregation : public UAggregation
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION()
 	virtual float Compute(TArray<float> Values) override;
 
 };

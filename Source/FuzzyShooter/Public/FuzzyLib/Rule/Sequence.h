@@ -20,13 +20,13 @@ class FUZZYSHOOTER_API USequence : public UObject
 	
 public:
 	UPROPERTY()
-	TMap<UVariable*, FString> Content;
+	TMap<UVariable*, UTerm*> Content;
 
 	UPROPERTY()
 	UAggregation* Aggregation;
 
 	float Compute(TMap<UVariable*, int32> Input);
 
-	void Set(TMap<UVariable*, FString> ContentOther, UAggregation* AggregationOther);
+	void Set(TMap<UVariable*, UTerm*> ContentOther, UAggregation* AggregationOther);
 
 };

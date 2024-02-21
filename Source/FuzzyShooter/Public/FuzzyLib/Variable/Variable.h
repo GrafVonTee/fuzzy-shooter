@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 
 #include "FuzzyLib/Term/Term.h"
+#include "VariableReceiver.h"
 
 #include "Variable.generated.h"
 
@@ -19,7 +20,7 @@ class FUZZYSHOOTER_API UVariable : public UObject
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	FName Name;
+	FString Name;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Range")
 	int32 LowerBound;
@@ -33,6 +34,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
 	TMap<FString, float> LastValue;
 
+	UPROPERTY()
+	UVariableReceiver* Receiver;
+
 	UFUNCTION(BlueprintCallable, Category = "Membership")
 	void UpdateDegreeOfMembership(int32 x);
 
@@ -45,12 +49,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Membership")
 	float GetValueFromMapByName(const FString& TargetTermName);
 
+	FString GetTermWithValue(int32 x);
+
 	UFUNCTION(BlueprintCallable, Category = "Membership")
 	void ClearTerms();
 
 	void Set(
-		FName NameOther,
-		int32 LowerBound,
-		int32 UpperBound
+		FString NameOther,
+		int32 LowerBoundOther,
+		int32 UpperBoundOther,
+		UVariableReceiver* ReceiverOther
 	);
 };

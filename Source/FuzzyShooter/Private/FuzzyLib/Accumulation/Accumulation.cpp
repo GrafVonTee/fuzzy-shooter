@@ -3,3 +3,7 @@
 
 #include "FuzzyLib/Accumulation/Accumulation.h"
 
+UTerm* UAccumulation::Compute(TArray<UTerm*> TermList)
+{
+	return nullptr;
+}

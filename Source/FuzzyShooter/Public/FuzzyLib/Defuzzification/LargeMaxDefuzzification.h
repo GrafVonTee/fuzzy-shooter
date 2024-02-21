@@ -14,4 +14,7 @@ class FUZZYSHOOTER_API ULargeMaxDefuzzification : public UDefuzzification
 {
 	GENERATED_BODY()
 	
+public:
+	virtual int32 Defuzzify(UTerm* Term) override;
+
 };

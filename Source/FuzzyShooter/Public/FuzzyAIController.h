@@ -6,6 +6,13 @@
 #include "AIController.h"
 
 #include "FuzzyLib/Variable/Variable.h"
+#include "FuzzyLib/Accumulation/Accumulation.h"
+#include "FuzzyLib/Activation/Activation.h"
+#include "FuzzyLib/Aggregation/Aggregation.h"
+#include "FuzzyLib/Defuzzification/Defuzzification.h"
+#include "FuzzyLib/Rule/RuleBlock.h"
+#include "FuzzyLib/Term/Term.h"
+#include "FuzzyLib/Hedge/Hedge.h"
 
 #include "FuzzyAIController.generated.h"
 
@@ -23,21 +30,10 @@ protected:
 public:
 	AFuzzyAIController();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	UVariable* Health;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	UVariable* Ammo;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	UVariable* Action;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	UVariable* MovingAction;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Timer")
 	float ReactionTime = 1; // in sec
 
+	UPROPERTY()
 	FTimerHandle ReactionTimer;
 
 	UFUNCTION(BlueprintCallable, Category = "Timer")
@@ -47,5 +43,65 @@ public:
 	void BeginReacting();
 
 	UFUNCTION(BlueprintCallable, Category = "General")
-	void UpdateCharacter();
+	void UpdateCharacter(FString ActionState, float ActionDegree, FString MovingState);
+
+
+	/** Fuzzy Logic Beginning */
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
+	UVariable* Health;
+
+	void SetHealthVariable();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
+	UVariable* Ammo;
+
+	void SetAmmoVariable();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
+	UVariable* Action;
+
+	void SetActionVariable();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
+	UVariable* MovingAction;
+
+	void SetMovingActionVariable();
+
+	UPROPERTY()
+	UAggregation* Aggregation;
+
+	UPROPERTY()
+	UActivation* Activation;
+	
+	UPROPERTY()
+	UAccumulation* Accumulation;
+	
+	UPROPERTY()
+	UVariableReceiver* Receiver;
+	
+	UPROPERTY()
+	UDefuzzification* Defuzzification;
+
+	UPROPERTY()
+	UHedge* HedgeNot;
+
+	UPROPERTY()
+	UHedge* HedgeVery;
+
+	UPROPERTY()
+	UHedge* HedgeApprox;
+
+	UPROPERTY()
+	URuleBlock* ActionRuleBlock;
+
+	void SetActionRuleBlock();
+
+	UPROPERTY()
+	URuleBlock* MovingRuleBlock;
+
+	void SetMovingRuleBlock();
+
+	void GenerateRule();
+
 };

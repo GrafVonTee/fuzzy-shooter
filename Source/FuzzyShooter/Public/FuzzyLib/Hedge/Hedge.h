@@ -7,17 +7,17 @@
 
 #include "FuzzyLib/Term/Term.h"
 
-#include "Accumulation.generated.h"
+#include "Hedge.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FUZZYSHOOTER_API UAccumulation : public UObject
+class FUZZYSHOOTER_API UHedge : public UObject
 {
 	GENERATED_BODY()
 	
 public:
-	virtual UTerm* Compute(TArray<UTerm*> TermList);
+	virtual UTerm* Compute(UTerm* OriginalSet);
 
 };

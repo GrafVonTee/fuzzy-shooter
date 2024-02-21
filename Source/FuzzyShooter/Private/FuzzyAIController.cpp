@@ -7,13 +7,23 @@
 #include "FuzzyLib/Term/Triangluar.h"
 #include "FuzzyLib/Term/Trapezoid.h"
 
+#include "FuzzyLib/Variable/MaxReceiver.h"
+#include "FuzzyLib/Accumulation/MaxAccumulation.h"
+#include "FuzzyLib/Activation/ProdActivation.h"
+#include "FuzzyLib/Aggregation/MinAggregation.h"
+#include "FuzzyLib/Defuzzification/LargeMaxDefuzzification.h"
+
+#include "FuzzyLib/Hedge/HedgeNot.h"
+#include "FuzzyLib/Hedge/HedgeVery.h"
+#include "FuzzyLib/Hedge/HedgeApproximately.h"
+
 #include "AgentCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/EngineTypes.h"
 
-void SetHealthVariable(UVariable* Health)
+void AFuzzyAIController::SetHealthVariable()
 {
-	Health->Set("Health", 0, 150);
+	Health->Set("Health", 0, 150, Receiver);
 
 	UTrapezoid* HealthLow = NewObject<UTrapezoid>();
 	HealthLow->Set(
@@ -25,7 +35,7 @@ void SetHealthVariable(UVariable* Health)
 		40,
 		60
 	);
-	Health->AddTerm(HealthLow->Name.ToString(), HealthLow);
+	Health->AddTerm(HealthLow->Name, HealthLow);
 
 	UTrapezoid* HealthEnough = NewObject<UTrapezoid>();
 	HealthEnough->Set(
@@ -37,7 +47,7 @@ void SetHealthVariable(UVariable* Health)
 		90,
 		110
 	);
-	Health->AddTerm(HealthEnough->Name.ToString(), HealthEnough);
+	Health->AddTerm(HealthEnough->Name, HealthEnough);
 
 	UTrapezoid* HealthMany = NewObject<UTrapezoid>();
 	HealthMany->Set(
@@ -49,12 +59,12 @@ void SetHealthVariable(UVariable* Health)
 		150,
 		150
 	);
-	Health->AddTerm(HealthMany->Name.ToString(), HealthMany);
+	Health->AddTerm(HealthMany->Name, HealthMany);
 }
 
-void SetAmmoVariable(UVariable* Ammo)
+void AFuzzyAIController::SetAmmoVariable()
 {
-	Ammo->Set("Ammo", 0, 150);
+	Ammo->Set("Ammo", 0, 150, Receiver);
 	UTrapezoid* AmmoLow = NewObject<UTrapezoid>();
 	AmmoLow->Set(
 		"Low",
@@ -65,7 +75,7 @@ void SetAmmoVariable(UVariable* Ammo)
 		40,
 		60
 	);
-	Ammo->AddTerm(AmmoLow->Name.ToString(), AmmoLow);
+	Ammo->AddTerm(AmmoLow->Name, AmmoLow);
 
 	UTrapezoid* AmmoEnough = NewObject<UTrapezoid>();
 	AmmoEnough->Set(
@@ -77,7 +87,7 @@ void SetAmmoVariable(UVariable* Ammo)
 		90,
 		110
 	);
-	Ammo->AddTerm(AmmoEnough->Name.ToString(), AmmoEnough);
+	Ammo->AddTerm(AmmoEnough->Name, AmmoEnough);
 
 	UTrapezoid* AmmoMany = NewObject<UTrapezoid>();
 
@@ -91,13 +101,13 @@ void SetAmmoVariable(UVariable* Ammo)
 		150,
 		150
 	);
-	Ammo->AddTerm(AmmoMany->Name.ToString(), AmmoMany);
+	Ammo->AddTerm(AmmoMany->Name, AmmoMany);
 
 }
 
-void SetActionVariable(UVariable* Action)
+void AFuzzyAIController::SetActionVariable()
 {
-	Action->Set("Action", 0, 100);
+	Action->Set("Action", 0, 100, Receiver);
 
 	UTriangluar* Run = NewObject<UTriangluar>();
 	Run->Set(
@@ -108,10 +118,10 @@ void SetActionVariable(UVariable* Action)
 		0,
 		100
 	);
-	Action->AddTerm(Run->Name.ToString(), Run);
+	Action->AddTerm(Run->Name, Run);
 
 	UTriangluar* Shoot = NewObject<UTriangluar>();
-	Run->Set(
+	Shoot->Set(
 		"Shoot",
 		Action->LowerBound,
 		Action->UpperBound,
@@ -119,13 +129,13 @@ void SetActionVariable(UVariable* Action)
 		100,
 		100
 	);
-	Action->AddTerm(Shoot->Name.ToString(), Shoot);
+	Action->AddTerm(Shoot->Name, Shoot);
 
 }
 
-void SetMovingActionVariable(UVariable* MovingAction)
+void AFuzzyAIController::SetMovingActionVariable()
 {
-	MovingAction->Set("Moving Action", 0, 150);
+	MovingAction->Set("Moving Action", 0, 150, Receiver);
 
 	UTriangluar* Hide = NewObject<UTriangluar>();
 	Hide->Set(
@@ -136,7 +146,7 @@ void SetMovingActionVariable(UVariable* MovingAction)
 		0,
 		50
 	);
-	MovingAction->AddTerm(Hide->Name.ToString(), Hide);
+	MovingAction->AddTerm(Hide->Name, Hide);
 
 	UTriangluar* GoToMedKit = NewObject<UTriangluar>();
 	GoToMedKit->Set(
@@ -147,7 +157,7 @@ void SetMovingActionVariable(UVariable* MovingAction)
 		50,
 		100
 	);
-	MovingAction->AddTerm(GoToMedKit->Name.ToString(), GoToMedKit);
+	MovingAction->AddTerm(GoToMedKit->Name, GoToMedKit);
 
 	UTriangluar* GoToAmmo = NewObject<UTriangluar>();
 	GoToAmmo->Set(
@@ -158,7 +168,7 @@ void SetMovingActionVariable(UVariable* MovingAction)
 		100,
 		150
 	);
-	MovingAction->AddTerm(GoToAmmo->Name.ToString(), GoToAmmo);
+	MovingAction->AddTerm(GoToAmmo->Name, GoToAmmo);
 
 	UTriangluar* Chase = NewObject<UTriangluar>();
 	Chase->Set(
@@ -169,21 +179,72 @@ void SetMovingActionVariable(UVariable* MovingAction)
 		150,
 		150
 	);
-	MovingAction->AddTerm(Chase->Name.ToString(), Chase);
+	MovingAction->AddTerm(Chase->Name, Chase);
 
+}
+
+void AFuzzyAIController::GenerateRule()
+{
+}
+
+void AFuzzyAIController::SetActionRuleBlock()
+{
+	ActionRuleBlock->SetAccumulation(Accumulation);
+
+	// Shoot Block
+	URule* Shoot1Rule = NewObject<URule>();
+	USequence* Shoot1Antecedent = NewObject<USequence>();
+
+	TMap<UVariable*, UTerm*> Shoot1Condition;
+	Shoot1Condition.Add(Health, HedgeNot->Compute(Health->GetTermFromMapByName("Low")));
+	Shoot1Condition.Add(Ammo, HedgeNot->Compute(Ammo->GetTermFromMapByName("Low")));
+	
+	Shoot1Antecedent->Set(Shoot1Condition, Aggregation);
+	Shoot1Rule->Set(Shoot1Antecedent, Action->GetTermFromMapByName("Shoot"), Activation);
+	ActionRuleBlock->AddRuleToList(Shoot1Rule);
+
+	// Run Block
+	URule* Run1Rule = NewObject<URule>();
+	USequence* Run1Antecedent = NewObject<USequence>();
+
+	TMap<UVariable*, UTerm*> Run1Condition;
+	Run1Condition.Add(Health, HedgeApprox->Compute(Health->GetTermFromMapByName("Low")));
+
+	Run1Antecedent->Set(Run1Condition, Aggregation);
+	Run1Rule->Set(Run1Antecedent, Action->GetTermFromMapByName("Run"), Activation);
+	ActionRuleBlock->AddRuleToList(Run1Rule);
+
+	URule* Run2Rule = NewObject<URule>();
+	USequence* Run2Antecedent = NewObject<USequence>();
+
+	TMap<UVariable*, UTerm*> Run2Condition;
+	Run2Condition.Add(Ammo, HedgeApprox->Compute(Ammo->GetTermFromMapByName("Low")));
+
+	Run2Antecedent->Set(Run2Condition, Aggregation);
+	Run2Rule->Set(Run2Antecedent, Action->GetTermFromMapByName("Run"), Activation);
+	ActionRuleBlock->AddRuleToList(Run2Rule);
+
+}
+
+void AFuzzyAIController::SetMovingRuleBlock()
+{
 }
 
 void AFuzzyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetHealthVariable(Health);
-	SetAmmoVariable(Ammo);
-	SetActionVariable(Action);
-	SetMovingActionVariable(MovingAction);
+	SetHealthVariable();
+	SetAmmoVariable();
+	SetActionVariable();
+	SetMovingActionVariable();
 
-	Action->UpdateDegreeOfMembership(100);
-	MovingAction->UpdateDegreeOfMembership(150);
+	SetActionRuleBlock();
+	SetMovingRuleBlock();
+
+	BeginReacting();
+	ResetReactionTimer();
+
 }
 
 AFuzzyAIController::AFuzzyAIController()
@@ -192,6 +253,19 @@ AFuzzyAIController::AFuzzyAIController()
 	Ammo = NewObject<UVariable>();
 	Action = NewObject<UVariable>();
 	MovingAction = NewObject<UVariable>();
+
+	Aggregation = NewObject<UMinAggregation>();
+	Activation = NewObject<UProdActivation>();
+	Accumulation = NewObject<UMaxAccumulation>();
+	Receiver = NewObject<UMaxReceiver>();
+	Defuzzification = NewObject<ULargeMaxDefuzzification>();
+
+	ActionRuleBlock = NewObject<URuleBlock>();
+	MovingRuleBlock = NewObject<URuleBlock>();
+
+	HedgeNot = NewObject<UHedgeNot>();
+	HedgeVery = NewObject<UHedgeVery>();
+	HedgeApprox = NewObject<UHedgeApproximately>();
 
 }
 
@@ -203,12 +277,65 @@ void AFuzzyAIController::ResetReactionTimer()
 
 void AFuzzyAIController::BeginReacting()
 {
+	AAgentCharacter* ControlledAgent = Cast<AAgentCharacter>(GetCharacter());
+	if (ControlledAgent)
+	{
+		TMap<UVariable*, int32> ActionInput;
+		ActionInput.Add(Health, ControlledAgent->CurrentHealth);
+		ActionInput.Add(Ammo, ControlledAgent->CurrentAmmo);
+
+		UTerm* AccumulatedAction = ActionRuleBlock->Accumulate(ActionInput);
+		int32 DefuzzActionValue = Defuzzification->Defuzzify(AccumulatedAction);
+		FString ActionName = Action->GetTermWithValue(DefuzzActionValue);
+		float ActionDegree = Action->LastValue[ActionName];
+
+		FString MovingName = MovingAction->GetTermWithValue(0);
+
+		UpdateCharacter(ActionName, ActionDegree, MovingName);
+	}
+
 }
 
-void AFuzzyAIController::UpdateCharacter()
+void AFuzzyAIController::UpdateCharacter(FString ActionState, float ActionDegree, FString MovingState)
 {
-	ACharacter* ControlledAgent = GetCharacter();
-	if (ControlledAgent->IsA(AAgentCharacter::StaticClass()))
+	AAgentCharacter* ControlledAgent = Cast<AAgentCharacter>(GetCharacter());
+	if (ControlledAgent)
 	{
+		if (ActionState == "Shoot")
+		{
+			ControlledAgent->SetShootingState();
+			ControlledAgent->UpdateShootingRate(ActionDegree);
+		}
+		else if (ActionState == "Run")
+		{
+			ControlledAgent->SetRunningState();
+			ControlledAgent->UpdateRunningSpeed(ActionDegree);
+		}
+		else
+		{
+			return;
+		}
+
+		if (MovingState == "Chase")
+		{
+			ControlledAgent->SetChaseState();
+		}
+		else if (MovingState == "Ammo")
+		{
+			ControlledAgent->SetAmmoState();
+		}
+		else if (MovingState == "MedKit")
+		{
+			ControlledAgent->SetMedKitState();
+		}
+		else if (MovingState == "Hide")
+		{
+			ControlledAgent->SetHideState();
+		}
+		else
+		{
+			return;
+		}
 	}
+
 }

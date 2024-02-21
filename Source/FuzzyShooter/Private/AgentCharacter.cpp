@@ -109,6 +109,8 @@ void AAgentCharacter::UpdateShootingRate(float Degree)
 		CurrentShootRate = MaximumShootRate + (MinimumShootRate - MaximumShootRate) * (1 - Degree);
 	}
 
+	ResetShootingTimer();
+
 }
 
 void AAgentCharacter::SetRunningState()

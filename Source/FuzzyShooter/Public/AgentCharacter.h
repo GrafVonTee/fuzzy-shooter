@@ -47,6 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action Behaviour")
 	EActionState ActionState;
 
+	UFUNCTION()
 	void SwapActionState();
 
 	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
@@ -63,7 +64,9 @@ public:
 
 
 	/** Moving Behaviour Section */
+	UPROPERTY()
 	FTimerHandle MovingTimerHandle;
+
 	const float PathFindDuration = 0.25;
 
 	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
@@ -81,6 +84,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
 	void UpdatePointOfInterest();
 
+	UFUNCTION()
 	void SwapMovingState();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Moving Behaviour")
@@ -100,8 +104,10 @@ public:
 
 
 	/** Shooting Section */
+	UFUNCTION()
 	void OneShot();
 
+	UPROPERTY()
 	FTimerHandle ShootingTimerHandle;
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting Control")

@@ -18,8 +18,6 @@ class FUZZYSHOOTER_API UActivation : public UObject
 	GENERATED_BODY()
 	
 public:
-	UActivation() = default;
-
 	virtual UTerm* GetActivatedSet(float ActivationCoeff, UTerm* OriginalSet);
 
 };

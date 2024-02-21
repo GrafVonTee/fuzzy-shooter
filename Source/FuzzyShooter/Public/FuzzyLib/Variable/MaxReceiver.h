@@ -14,4 +14,7 @@ class FUZZYSHOOTER_API UMaxReceiver : public UVariableReceiver
 {
 	GENERATED_BODY()
 	
+public:
+	virtual FString Receive(TMap<FString, float> List) override;
+
 };

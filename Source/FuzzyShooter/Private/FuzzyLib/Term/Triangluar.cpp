@@ -16,15 +16,19 @@ void UTriangluar::MakeRange()
 	termB = PointB - LowerBound;
 	termC = PointC - LowerBound;
 
-	for (int32 Index = 0; Index != ValueRange.Num(); ++Index)
+	for (int32 Index = 0; Index < ValueRange.Num(); ++Index)
 	{
 		if (Index < termA || Index > termC)
 		{
 			ValueRange[Index] = 0.0f;
 		}
-		else if (Index <= termB)
+		else if (Index < termB)
 		{
 			ValueRange[Index] = (Index - termA) * 1.0f / (termB - termA);
+		}
+		else if (Index == termB)
+		{
+			ValueRange[Index] = 1;
 		}
 		else
 		{
@@ -34,7 +38,7 @@ void UTriangluar::MakeRange()
 }
 
 void UTriangluar::Set(
-	FName NameOther,
+	FString NameOther,
 	int32 LowerBoundOther,
 	int32 UpperBoundOther,
 	int32 PointAOther,

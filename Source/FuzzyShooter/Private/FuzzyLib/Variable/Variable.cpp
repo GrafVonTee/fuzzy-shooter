@@ -36,16 +36,29 @@ float UVariable::GetValueFromMapByName(const FString& TargetTermName)
 	return LastValue[TargetTermName];
 }
 
+FString UVariable::GetTermWithValue(int32 x)
+{
+	UpdateDegreeOfMembership(x);
+	return Receiver->Receive(LastValue);
+
+}
+
 void UVariable::ClearTerms()
 {
 	Terms.Empty();
 
 }
 
-void UVariable::Set(FName NameOther, int32 LowerBoundOther, int32 UpperBoundOther)
+void UVariable::Set(
+	FString NameOther,
+	int32 LowerBoundOther,
+	int32 UpperBoundOther,
+	UVariableReceiver* ReceiverOther
+)
 {
 	Name = NameOther;
 	LowerBound = LowerBoundOther;
 	UpperBound = UpperBoundOther;
+	Receiver = ReceiverOther;
 	ClearTerms();
 }

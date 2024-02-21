@@ -5,10 +5,6 @@
 #include "Containers/UnrealString.h"
 #include "Containers/Array.h"
 
-UTerm::UTerm()
-{
-}
-
 void UTerm::MakeRange()
 {
 	ValueRange.Empty();
@@ -39,7 +35,7 @@ UTerm* UTerm::Copy()
 }
 
 void UTerm::Set(
-	FName NameOther,
+	FString NameOther,
 	int32 LowerBoundOther,
 	int32 UpperBoundOther
 )

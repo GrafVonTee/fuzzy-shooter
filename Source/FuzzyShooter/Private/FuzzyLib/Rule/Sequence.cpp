@@ -8,9 +8,9 @@ float USequence::Compute(TMap<UVariable*, int32> Input)
 {
 	TArray<float> DomInput;
 
-	for (auto& ElemOfContent : Content)
+	for (const auto& ElemOfContent : Content)
 	{
-		UTerm* TempTerm = ElemOfContent.Key->GetTermFromMapByName(ElemOfContent.Value);
+		UTerm* TempTerm = ElemOfContent.Value;
 
 		DomInput.Add(TempTerm->GetDegreeOfMembership(Input[ElemOfContent.Key]));
 	}
@@ -18,7 +18,7 @@ float USequence::Compute(TMap<UVariable*, int32> Input)
 	return Aggregation->Compute(DomInput);
 }
 
-void USequence::Set(TMap<UVariable*, FString> ContentOther, UAggregation* AggregationOther)
+void USequence::Set(TMap<UVariable*, UTerm*> ContentOther, UAggregation* AggregationOther)
 {
 	Content = ContentOther;
 	Aggregation = AggregationOther;

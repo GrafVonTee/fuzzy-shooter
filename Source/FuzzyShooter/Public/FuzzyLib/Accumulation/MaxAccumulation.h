@@ -14,4 +14,7 @@ class FUZZYSHOOTER_API UMaxAccumulation : public UAccumulation
 {
 	GENERATED_BODY()
 	
+public:
+	virtual UTerm* Compute(TArray<UTerm*> TermList) override;
+
 };

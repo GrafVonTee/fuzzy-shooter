@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 
 #include "Rule.h"
+#include "FuzzyLib/Accumulation/Accumulation.h"
 
 #include "RuleBlock.generated.h"
 
@@ -17,4 +18,17 @@ class FUZZYSHOOTER_API URuleBlock : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY()
+	TArray<URule*> RuleList;
+
+	UPROPERTY()
+	UAccumulation* Accumulation;
+
+	void AddRuleToList(URule* Rule);
+
+	void SetAccumulation(UAccumulation* AccumulationOther);
+
+	UTerm* Accumulate(TMap<UVariable*, int32> Input);
+
 };

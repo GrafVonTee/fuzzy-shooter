@@ -3,3 +3,7 @@
 
 #include "FuzzyLib/Defuzzification/Defuzzification.h"
 
+int32 UDefuzzification::Defuzzify(UTerm* Term)
+{
+    return Term->LowerBound;
+}

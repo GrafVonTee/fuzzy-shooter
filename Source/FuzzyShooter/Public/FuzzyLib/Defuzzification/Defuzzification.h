@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
+#include "FuzzyLib/Term/Term.h"
+
 #include "Defuzzification.generated.h"
 
 /**
@@ -14,4 +17,7 @@ class FUZZYSHOOTER_API UDefuzzification : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	virtual int32 Defuzzify(UTerm* Term);
+
 };

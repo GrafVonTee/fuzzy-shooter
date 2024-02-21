@@ -17,13 +17,13 @@ void UTrapezoid::MakeRange()
 	termC = PointC - LowerBound;
 	termD = PointD - LowerBound;
 
-	for (int32 Index = 0; Index != ValueRange.Num(); ++Index)
+	for (int32 Index = 0; Index < ValueRange.Num(); ++Index)
 	{
 		if (Index < termA || Index > termD)
 		{
 			ValueRange[Index] = 0.0f;
 		}
-		else if (Index <= termB)
+		else if (Index < termB)
 		{
 			ValueRange[Index] = (Index - termA) * 1.0f / (termB - termA);
 		}
@@ -39,7 +39,7 @@ void UTrapezoid::MakeRange()
 }
 
 void UTrapezoid::Set(
-	FName NameOther,
+	FString NameOther,
 	int32 LowerBoundOther,
 	int32 UpperBoundOther,
 	int32 PointAOther,

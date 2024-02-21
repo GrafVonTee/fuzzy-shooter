@@ -3,3 +3,7 @@
 
 #include "FuzzyLib/Variable/VariableReceiver.h"
 
+FString UVariableReceiver::Receive(TMap<FString, float> List)
+{
+	return FString();
+}

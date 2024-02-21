@@ -20,8 +20,13 @@ class FUZZYSHOOTER_API URule : public UObject
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY()
 	USequence* Antecedent;
+
+	UPROPERTY()
 	UTerm* Consequent;
+	
+	UPROPERTY()
 	UActivation* Activation;
 
 	UTerm* Activate(TMap<UVariable*, int32> Input);

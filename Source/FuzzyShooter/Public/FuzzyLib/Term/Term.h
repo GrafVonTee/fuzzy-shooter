@@ -15,13 +15,8 @@ class FUZZYSHOOTER_API UTerm : public UObject
 	GENERATED_BODY()
 	
 public:
-	UTerm();
-
-	// Term constructor
-	//UTerm(FName nameOther, int32 lowerBoundOther, int32 upperBoundOther);
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	FName Name;
+	FString Name;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Range")
 	int32 LowerBound;
@@ -40,7 +35,7 @@ public:
 	UTerm* Copy();
 
 	void Set(
-		FName NameOther,
+		FString NameOther,
 		int32 LowerBoundOther,
 		int32 UpperBoundOther
 	);
