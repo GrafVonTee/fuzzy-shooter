@@ -21,79 +21,80 @@ void AAgentCharacter::BeginPlay()
 
 }
 
-void AAgentCharacter::SwapActionState()
-{
-	static EActionState LastActionState = ActionState;
+//void AAgentCharacter::SwapActionState()
+//{
+//	static EActionState LastActionState = ActionState;
+//
+//	if (ActionState != LastActionState)
+//	{
+//		switch (ActionState)
+//		{
+//		case EActionState::VE_Shoot:
+//			UpdateShootingRate(1);
+//			SetShootingState();
+//			break;
+//
+//		case EActionState::VE_Run:
+//			UpdateRunningSpeed(1);
+//			SetRunningState();
+//			break;
+//
+//		default:
+//			break;
+//		}
+//
+//		LastActionState = ActionState;
+//	}
+//
+//}
 
-	if (ActionState != LastActionState)
-	{
-		switch (ActionState)
-		{
-		case EActionState::VE_Shoot:
-			UpdateShootingRate(1);
-			SetShootingState();
-			break;
-
-		case EActionState::VE_Run:
-			UpdateRunningSpeed(1);
-			SetRunningState();
-			break;
-
-		default:
-			break;
-		}
-
-		LastActionState = ActionState;
-	}
-
-}
-
-void AAgentCharacter::SwapMovingState()
-{
-	static EMovingState LastMovingState = MovingState;
-
-	if (MovingState != LastMovingState)
-	{
-		switch (MovingState)
-		{
-		case EMovingState::VE_Chase:
-			SetChaseState();
-			break;
-
-		case EMovingState::VE_Ammo:
-			SetAmmoState();
-			break;
-
-		case EMovingState::VE_MedKit:
-			SetMedKitState();
-			break;
-
-		case EMovingState::VE_Hide:
-			SetHideState();
-			break;
-
-		default:
-			break;
-		}
-
-		LastMovingState = MovingState;
-		ResetMovingTimer();
-	}
-
-}
+//void AAgentCharacter::SwapMovingState()
+//{
+//	static EMovingState LastMovingState = MovingState;
+//
+//	if (MovingState != LastMovingState)
+//	{
+//		switch (MovingState)
+//		{
+//		case EMovingState::VE_Chase:
+//			SetChaseState();
+//			break;
+//
+//		case EMovingState::VE_Ammo:
+//			SetAmmoState();
+//			break;
+//
+//		case EMovingState::VE_MedKit:
+//			SetMedKitState();
+//			break;
+//
+//		case EMovingState::VE_Hide:
+//			SetHideState();
+//			break;
+//
+//		default:
+//			break;
+//		}
+//
+//		LastMovingState = MovingState;
+//		ResetMovingTimer();
+//	}
+//
+//}
 
 void AAgentCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SwapActionState();
-	SwapMovingState();
+	//SwapActionState();
+	//SwapMovingState();
 }
 
 void AAgentCharacter::SetShootingState()
 {
 	ActionState = EActionState::VE_Shoot;
 	ResetShootingTimer();
+	OneShot();
 	UpdateRunningSpeed(0);
 
 }
@@ -108,8 +109,6 @@ void AAgentCharacter::UpdateShootingRate(float Degree)
 	{
 		CurrentShootRate = MaximumShootRate + (MinimumShootRate - MaximumShootRate) * (1 - Degree);
 	}
-
-	ResetShootingTimer();
 
 }
 

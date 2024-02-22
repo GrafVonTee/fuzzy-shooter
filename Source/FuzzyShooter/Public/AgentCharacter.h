@@ -47,8 +47,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action Behaviour")
 	EActionState ActionState;
 
-	UFUNCTION()
-	void SwapActionState();
+	//UFUNCTION()
+	//void SwapActionState();
 
 	UFUNCTION(BlueprintCallable, Category = "Action Behaviour")
 	void SetShootingState();
@@ -84,8 +84,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Moving Behaviour")
 	void UpdatePointOfInterest();
 
-	UFUNCTION()
-	void SwapMovingState();
+	//UFUNCTION()
+	//void SwapMovingState();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Moving Behaviour")
 	void MoveToInterestPoint();

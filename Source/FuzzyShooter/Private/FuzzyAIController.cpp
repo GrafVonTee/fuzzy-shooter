@@ -334,13 +334,13 @@ void AFuzzyAIController::UpdateCharacter(FString ActionState, float ActionDegree
 	{
 		if (ActionState == "Shoot")
 		{
-			ControlledAgent->SetShootingState();
 			ControlledAgent->UpdateShootingRate(ActionDegree);
+			ControlledAgent->SetShootingState();
 		}
 		else if (ActionState == "Run")
 		{
-			ControlledAgent->SetRunningState();
 			ControlledAgent->UpdateRunningSpeed(ActionDegree);
+			ControlledAgent->SetRunningState();
 		}
 		else
 		{
