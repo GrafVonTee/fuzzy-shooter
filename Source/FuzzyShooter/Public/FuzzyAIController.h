@@ -12,7 +12,7 @@
 #include "FuzzyLib/Defuzzification/Defuzzification.h"
 #include "FuzzyLib/Rule/RuleBlock.h"
 #include "FuzzyLib/Term/Term.h"
-#include "FuzzyLib/Hedge/Hedge.h"
+#include "FuzzyLib/Rule/RuleParser.h"
 
 #include "FuzzyAIController.generated.h"
 
@@ -84,13 +84,9 @@ public:
 	UDefuzzification* Defuzzification;
 
 	UPROPERTY()
-	UHedge* HedgeNot;
+	URuleParser* RuleParser;
 
-	UPROPERTY()
-	UHedge* HedgeVery;
-
-	UPROPERTY()
-	UHedge* HedgeApprox;
+	void SetRuleParser();
 
 	UPROPERTY()
 	URuleBlock* ActionRuleBlock;
@@ -101,7 +97,5 @@ public:
 	URuleBlock* MovingRuleBlock;
 
 	void SetMovingRuleBlock();
-
-	void GenerateRule();
 
 };

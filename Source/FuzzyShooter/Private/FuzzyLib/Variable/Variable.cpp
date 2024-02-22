@@ -15,11 +15,11 @@ void UVariable::UpdateDegreeOfMembership(int32 x)
 
 }
 
-void UVariable::AddTerm(FString TermName, UTerm* NewTerm)
+void UVariable::AddTerm(FString TermName, UTerm* NewTerm, int32 Weight)
 {
 	NewTerm->MakeRange();
 	Terms.Add(TermName, NewTerm);
-
+	WeightsForTerms.Add(TermName, Weight);
 }
 
 UTerm* UVariable::GetTermFromMapByName(const FString& TargetTermName)
@@ -39,6 +39,11 @@ float UVariable::GetValueFromMapByName(const FString& TargetTermName)
 FString UVariable::GetTermWithValue(int32 x)
 {
 	UpdateDegreeOfMembership(x);
+	auto WeightedValue = LastValue;
+	for (auto& Elem : WeightedValue)
+	{
+		WeightedValue[Elem.Key] *= WeightsForTerms[Elem.Key];
+	}
 	return Receiver->Receive(LastValue);
 
 }

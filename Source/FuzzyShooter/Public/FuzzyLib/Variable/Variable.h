@@ -41,7 +41,7 @@ public:
 	void UpdateDegreeOfMembership(int32 x);
 
 	UFUNCTION(BlueprintCallable, Category = "Membership")
-	void AddTerm(FString TermName, UTerm* NewTerm);
+	void AddTerm(FString TermName, UTerm* NewTerm, int32 Weight);
 
 	UFUNCTION(BlueprintCallable, Category = "Membership")
 	UTerm* GetTermFromMapByName(const FString& TargetTermName);
@@ -60,4 +60,8 @@ public:
 		int32 UpperBoundOther,
 		UVariableReceiver* ReceiverOther
 	);
+
+	UPROPERTY()
+	TMap<FString, int32> WeightsForTerms;
+
 };

@@ -117,13 +117,13 @@ public:
 	void ClearShootingTimer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float CurrentShootRate = 1; // seconds
+	float CurrentShootRate = 0.4; // seconds
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float MaximumShootRate = 0.2; // seconds
+	float MaximumShootRate = 0.1; // seconds
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float MinimumShootRate = 2; // seconds
+	float MinimumShootRate = 1; // seconds
 
 
 	/** Garbage Section */
