@@ -4,22 +4,64 @@
 #include "FuzzyAIController.h"
 #include "UObject/NameTypes.h"
 
-#include "FuzzyLib/Term/Triangluar.h"
+#include "FuzzyLib/Term/Gaussian.h"
 #include "FuzzyLib/Term/Trapezoid.h"
 
 #include "FuzzyLib/Variable/MaxReceiver.h"
 #include "FuzzyLib/Accumulation/MaxAccumulation.h"
 #include "FuzzyLib/Activation/ProdActivation.h"
 #include "FuzzyLib/Aggregation/MinAggregation.h"
-#include "FuzzyLib/Defuzzification/LargeMaxDefuzzification.h"
+#include "FuzzyLib/Defuzzification/CentroidDefuzzification.h"
 
 #include "FuzzyLib/Hedge/HedgeNot.h"
 #include "FuzzyLib/Hedge/HedgeVery.h"
 #include "FuzzyLib/Hedge/HedgeApproximately.h"
 
+#include "UObject/Object.h"
+
 #include "AgentCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/EngineTypes.h"
+
+
+AFuzzyAIController::AFuzzyAIController()
+{
+}
+
+void AFuzzyAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Health = NewObject<UVariable>();
+	Ammo = NewObject<UVariable>();
+	Action = NewObject<UVariable>();
+	MovingAction = NewObject<UVariable>();
+
+	Aggregation = NewObject<UMinAggregation>();
+	Activation = NewObject<UProdActivation>();
+	Accumulation = NewObject<UMaxAccumulation>();
+	Receiver = NewObject<UMaxReceiver>();
+	Defuzzification = NewObject<UCentroidDefuzzification>();
+
+	ActionRuleBlock = NewObject<URuleBlock>();
+	MovingRuleBlock = NewObject<URuleBlock>();
+
+	HedgeNot = NewObject<UHedgeNot>();
+	HedgeVery = NewObject<UHedgeVery>();
+	HedgeApprox = NewObject<UHedgeApproximately>();
+
+	SetHealthVariable();
+	SetAmmoVariable();
+	SetActionVariable();
+	SetMovingActionVariable();
+
+	SetActionRuleBlock();
+	SetMovingRuleBlock();
+
+	BeginReacting();
+	ResetReactionTimer();
+
+}
 
 void AFuzzyAIController::SetHealthVariable()
 {
@@ -33,7 +75,7 @@ void AFuzzyAIController::SetHealthVariable()
 		0,
 		0,
 		40,
-		60
+		70
 	);
 	Health->AddTerm(HealthLow->Name, HealthLow);
 
@@ -43,7 +85,7 @@ void AFuzzyAIController::SetHealthVariable()
 		Health->LowerBound,
 		Health->UpperBound,
 		40,
-		60,
+		70,
 		90,
 		110
 	);
@@ -109,25 +151,23 @@ void AFuzzyAIController::SetActionVariable()
 {
 	Action->Set("Action", 0, 100, Receiver);
 
-	UTriangluar* Run = NewObject<UTriangluar>();
+	UGaussian* Run = NewObject<UGaussian>();
 	Run->Set(
 		"Run",
 		Action->LowerBound,
 		Action->UpperBound,
 		0,
-		0,
-		100
+		50
 	);
 	Action->AddTerm(Run->Name, Run);
 
-	UTriangluar* Shoot = NewObject<UTriangluar>();
+	UGaussian* Shoot = NewObject<UGaussian>();
 	Shoot->Set(
 		"Shoot",
 		Action->LowerBound,
 		Action->UpperBound,
-		0,
 		100,
-		100
+		50
 	);
 	Action->AddTerm(Shoot->Name, Shoot);
 
@@ -137,47 +177,43 @@ void AFuzzyAIController::SetMovingActionVariable()
 {
 	MovingAction->Set("Moving Action", 0, 150, Receiver);
 
-	UTriangluar* Hide = NewObject<UTriangluar>();
+	UGaussian* Hide = NewObject<UGaussian>();
 	Hide->Set(
 		"Hide",
 		MovingAction->LowerBound,
 		MovingAction->UpperBound,
 		0,
-		0,
 		50
 	);
 	MovingAction->AddTerm(Hide->Name, Hide);
 
-	UTriangluar* GoToMedKit = NewObject<UTriangluar>();
+	UGaussian* GoToMedKit = NewObject<UGaussian>();
 	GoToMedKit->Set(
 		"MedKit",
 		MovingAction->LowerBound,
 		MovingAction->UpperBound,
-		0,
 		50,
-		100
+		50
 	);
 	MovingAction->AddTerm(GoToMedKit->Name, GoToMedKit);
 
-	UTriangluar* GoToAmmo = NewObject<UTriangluar>();
+	UGaussian* GoToAmmo = NewObject<UGaussian>();
 	GoToAmmo->Set(
 		"Ammo",
 		MovingAction->LowerBound,
 		MovingAction->UpperBound,
-		50,
 		100,
-		150
+		50
 	);
 	MovingAction->AddTerm(GoToAmmo->Name, GoToAmmo);
 
-	UTriangluar* Chase = NewObject<UTriangluar>();
+	UGaussian* Chase = NewObject<UGaussian>();
 	Chase->Set(
 		"Chase",
 		MovingAction->LowerBound,
 		MovingAction->UpperBound,
-		100,
 		150,
-		150
+		50
 	);
 	MovingAction->AddTerm(Chase->Name, Chase);
 
@@ -228,45 +264,6 @@ void AFuzzyAIController::SetActionRuleBlock()
 
 void AFuzzyAIController::SetMovingRuleBlock()
 {
-}
-
-void AFuzzyAIController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	SetHealthVariable();
-	SetAmmoVariable();
-	SetActionVariable();
-	SetMovingActionVariable();
-
-	SetActionRuleBlock();
-	SetMovingRuleBlock();
-
-	BeginReacting();
-	ResetReactionTimer();
-
-}
-
-AFuzzyAIController::AFuzzyAIController()
-{
-	Health = NewObject<UVariable>();
-	Ammo = NewObject<UVariable>();
-	Action = NewObject<UVariable>();
-	MovingAction = NewObject<UVariable>();
-
-	Aggregation = NewObject<UMinAggregation>();
-	Activation = NewObject<UProdActivation>();
-	Accumulation = NewObject<UMaxAccumulation>();
-	Receiver = NewObject<UMaxReceiver>();
-	Defuzzification = NewObject<ULargeMaxDefuzzification>();
-
-	ActionRuleBlock = NewObject<URuleBlock>();
-	MovingRuleBlock = NewObject<URuleBlock>();
-
-	HedgeNot = NewObject<UHedgeNot>();
-	HedgeVery = NewObject<UHedgeVery>();
-	HedgeApprox = NewObject<UHedgeApproximately>();
-
 }
 
 void AFuzzyAIController::ResetReactionTimer()
