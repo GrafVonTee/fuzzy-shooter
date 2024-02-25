@@ -8,6 +8,7 @@ Developed with Unreal Engine 4
 
 - WASD -- Move Character
 - Left Mouse Button -- Shoot to Cursor Position
+- Escape -- Quit Game (may not work)
 
 **Some Features**
 
