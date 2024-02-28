@@ -4,19 +4,19 @@
 #include "FuzzyAIController.h"
 #include "UObject/NameTypes.h"
 
-#include "FuzzyLib/Term/Gaussian.h"
-#include "FuzzyLib/Term/Trapezoid.h"
+#include "Term/Gaussian.h"
+#include "Term/Trapezoid.h"
 
-#include "FuzzyLib/Variable/MaxReceiver.h"
-#include "FuzzyLib/Accumulation/MaxAccumulation.h"
-#include "FuzzyLib/Activation/ProdActivation.h"
-#include "FuzzyLib/Aggregation/MinAggregation.h"
-#include "FuzzyLib/Defuzzification/CentroidDefuzzification.h"
-#include "FuzzyLib/Defuzzification/LargeMaxDefuzzification.h"
+#include "Variable/MaxReceiver.h"
+#include "Accumulation/MaxAccumulation.h"
+#include "Activation/ProdActivation.h"
+#include "Aggregation/MinAggregation.h"
+#include "Defuzzification/CentroidDefuzzification.h"
+#include "Defuzzification/LargeMaxDefuzzification.h"
 
-#include "FuzzyLib/Hedge/HedgeNot.h"
-#include "FuzzyLib/Hedge/HedgeVery.h"
-#include "FuzzyLib/Hedge/HedgeApproximately.h"
+#include "Hedge/HedgeNot.h"
+#include "Hedge/HedgeVery.h"
+#include "Hedge/HedgeApproximately.h"
 
 #include "UObject/Object.h"
 

@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 
-#include "FuzzyLib/Variable/Variable.h"
-#include "FuzzyLib/Accumulation/Accumulation.h"
-#include "FuzzyLib/Activation/Activation.h"
-#include "FuzzyLib/Aggregation/Aggregation.h"
-#include "FuzzyLib/Defuzzification/Defuzzification.h"
-#include "FuzzyLib/Rule/RuleBlock.h"
-#include "FuzzyLib/Term/Term.h"
-#include "FuzzyLib/Rule/RuleParser.h"
+#include "Variable/Variable.h"
+#include "Accumulation/Accumulation.h"
+#include "Activation/Activation.h"
+#include "Aggregation/Aggregation.h"
+#include "Defuzzification/Defuzzification.h"
+#include "Rule/RuleBlock.h"
+#include "Term/Term.h"
+#include "Rule/RuleParser.h"
 
 #include "FuzzyAIController.generated.h"
 
